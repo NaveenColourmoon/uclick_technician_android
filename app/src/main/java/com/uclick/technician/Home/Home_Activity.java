@@ -47,7 +47,7 @@ public class Home_Activity extends AppCompatActivity implements Home_Menu_Adapte
 
         toolbar = findViewById(R.id.Home_Toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Anajaniputra Worker Dashboard");
+        getSupportActionBar().setTitle("Uclick Technician Dashboard");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //-------------SharedPreference--------

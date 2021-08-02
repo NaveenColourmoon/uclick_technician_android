@@ -137,7 +137,7 @@ public class Login_Activity extends AppCompatActivity {
                             startActivity(loginIntent);
                             Toast.makeText(Login_Activity.this, "Login Success", Toast.LENGTH_LONG).show();
                             finish();
-                        } else if (responseJsonObject.getString("status").equals("Invalid")) {
+                        } else if (responseJsonObject.getString("status").equalsIgnoreCase("Invalid")) {
                             String message = responseJsonObject.getString("message");
 
                             Toast.makeText(Login_Activity.this, "" + message, Toast.LENGTH_LONG).show();
@@ -217,62 +217,58 @@ public class Login_Activity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
-   public void forgotpassword(View view)
-   {
-                  final AlertDialog.Builder alert = new AlertDialog.Builder(Login_Activity.this);
-                View mView = getLayoutInflater().inflate(R.layout.forgotpassword_custom_dialog, null);
-                final EditText text_input = (EditText) mView.findViewById(R.id.text_input);
-                Button cancel_btn = (Button) mView.findViewById(R.id.cancel_btn);
-                Button submit_btn = (Button) mView.findViewById(R.id.submit_btn);
-                alert.setView(mView);
-                final AlertDialog alertDialog = alert.create();
-                alertDialog.setCanceledOnTouchOutside(false);
+    public void forgotpassword(View view) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(Login_Activity.this);
+        View mView = getLayoutInflater().inflate(R.layout.forgotpassword_custom_dialog, null);
+        final EditText text_input = (EditText) mView.findViewById(R.id.text_input);
+        Button cancel_btn = (Button) mView.findViewById(R.id.cancel_btn);
+        Button submit_btn = (Button) mView.findViewById(R.id.submit_btn);
+        alert.setView(mView);
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(false);
 
-                cancel_btn.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        alertDialog.dismiss();
-                    }
-                });
-                submit_btn.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        final String mobile = text_input.getText().toString();
-                        //----------Service Calling for forgot password----------
-                        JsonPlaceHolder jsonPlaceHolder = RetrofitInstance.getInstance().create(JsonPlaceHolder.class);
-                        Call<ResponseBody> responseBodyCall = jsonPlaceHolder.forgot_password(mobile);
-                        responseBodyCall.enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                try {
-                                    String responseString = new String(response.body().bytes());
-                                    JSONObject jsonObject = new JSONObject(responseString);
-
-                                    if (jsonObject.getString("status").equals("valid")) {
-                                        String message = jsonObject.getString("message");
-                                        alertDialog.dismiss();
-                                        Snackbar.make(v, "New password sent to your mobile number", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                    } else {
-                                        Snackbar.make(v, "Password Sending failed", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            }
-                        });
-                    }
-                });
-                alertDialog.show();
+        cancel_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
             }
-            //---------------forgot password service call----------
-   }
+        });
+        submit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String mobile = text_input.getText().toString();
+                //----------Service Calling for forgot password----------
+                JsonPlaceHolder jsonPlaceHolder = RetrofitInstance.getInstance().create(JsonPlaceHolder.class);
+                Call<ResponseBody> responseBodyCall = jsonPlaceHolder.forgot_password(mobile);
+                responseBodyCall.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        try {
+                            String responseString = new String(response.body().bytes());
+                            JSONObject jsonObject = new JSONObject(responseString);
+
+                            if (jsonObject.getString("status").equals("valid")) {
+                                String message = jsonObject.getString("message");
+                                alertDialog.dismiss();
+                                Snackbar.make(v, "New password sent to your mobile number", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            } else {
+                                Snackbar.make(v, "Password Sending failed", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    }
+                });
+            }
+        });
+        alertDialog.show();
+    }
+    //---------------forgot password service call----------
+}
 
